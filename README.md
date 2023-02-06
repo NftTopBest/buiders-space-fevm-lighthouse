@@ -27,3 +27,9 @@ decrypted content: <https://github.com/NftTopBest/buiders-space-fevm-lighthouse/
 ### EIP2535 to build large contract <https://eips.ethereum.org/EIPS/eip-2535>
 
 Our contract is large, so we use the Diamond Tech to build our smart contract: use the diamond cut func to deploy more facts: <https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/contracts/DiamondCutFacet.sol>
+
+## Deploy result
+
+* online demo: <https://www.buidlers.space/fevm/buidlers>
+* BuidlerProtocol contract(EIP2535): <https://hyperspace.filfox.info/en/address/0x9Fe9b4E2C0107546c6421fe88847332B53C06359>
+* Negentropy contract: <https://hyperspace.filfox.info/en/address/0xBb0658eCB49e0d09756E0cA879492B8553E6DcB8>
