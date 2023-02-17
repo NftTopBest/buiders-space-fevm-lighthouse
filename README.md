@@ -2,6 +2,27 @@
 
 A nft space that can create/trade/buy/bid/ask NFT stuff! A web3 way of creater space that like a web3 amazon!
 
+<img src="./screenshot.png" />
+
+## Links
+
+* [Online demo](https://www.buidlers.space)
+* [All screenshots](./screenshot/)
+
+## Application Tech Stack
+
+* [x] ERC1155
+* [x] EIP2535
+* [x] IPFS
+* [x] Hardhat
+* [x] Vercel
+* [x] TailwindCSS
+* [x] Vue3
+* [x] Pinia (state store)
+* [x] PWA
+* [x] Vue-i18n
+* [x] Vite2
+
 ## Problem
 
 NFT should be have value on it not just PFP. We create the super great Smart Contract BuidlerProtocol that treat it as the central of the Builders! Every builders can create many build for themself for any project(every project is an NFT).

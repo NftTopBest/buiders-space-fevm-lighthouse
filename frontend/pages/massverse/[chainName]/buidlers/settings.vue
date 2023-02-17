@@ -3,18 +3,10 @@
 </script>
 
 <template>
-  <div>
-    <header class="w-full">
-      <MvBuidlerHeader />
-    </header>
-
-    <div class="mx-auto max-w-4xl px-4 pt-4 lg:px-0 ">
-      <ProfileSettings />
-    </div>
-  </div>
+  <ProfileSettings class="w-4xl" />
 </template>
 
 <route lang="yaml">
 meta:
-  layout: massverse
+  layout: bs
 </route>

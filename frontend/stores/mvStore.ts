@@ -8,18 +8,18 @@ import {
   TruckIcon,
   WalletIcon,
 } from '@heroicons/vue/24/outline'
-import lighthouse from '@lighthouse-web3/sdk'
 import { CID } from 'multiformats/cid'
 import { base16 } from 'multiformats/bases/base16'
-import { getItem, setItem } from '~/helpers/ls'
 const tokenIdArr = []
 const tagsKeyByType = {}
 
 export const mvStore = defineStore('mvStore', () => {
-  const { initContract, walletAddress, addSuccess, signer, userData, getContractAddress, contractRead } = $(web3AuthStore())
+  const { initContract, walletAddress, addSuccess, addWarning, userData, getContractAddress, contractRead } = $(web3AuthStore())
   const { getJson, getStatus, storeJson } = $(useNFTStorage())
   const route = useRoute()
-  const chainName = $computed(() => route?.params.chainName)
+  const chain = CHAIN_NAME
+  const litNodeClient = inject('litNodeClient')
+  const chainName = $computed(() => route?.params.chainName || 'mumbai')
   const typeSlug = $computed(() => route?.params.type)
   let product = $ref({})
   const postModal = $ref({
@@ -28,13 +28,13 @@ export const mvStore = defineStore('mvStore', () => {
   let posts = $ref([])
   const form = $ref({
     isShow: false,
+    description: '',
     isLoading: false,
     title: '',
     tokenId: '',
     image: '',
     itemAccessNFTCount: 0,
     excerpt: '',
-    description: '',
     statusText: 'Submitting, pls wait!',
   })
 
@@ -156,6 +156,10 @@ export const mvStore = defineStore('mvStore', () => {
     }))
   }
 
+  const getUserProfileLink = (address, dataType = 'feed') => {
+    return `/${chainName}/buidlers/user/${address}/${dataType}`
+  }
+
   const getTokenDataFromChain = async(tokenId) => {
     const contractReader = await initContract('BuidlerProtocol')
     const rz = await contractReader.getToken(tokenId, '', '')
@@ -169,24 +173,46 @@ export const mvStore = defineStore('mvStore', () => {
       metas,
     } = rz
     const tokenData = await getJson(tokenURI)
+    const createdBy = get(tokenData, 'properties.createdBy')
+    let author = {}
+    if (createdBy) {
+      const authorCid = await contractReader.getBuidler(createdBy)
+      author = await getJson(authorCid)
+    }
+
     product = {
       ...tokenData,
+      author,
       tokenOwner,
       totalSupply,
       maxSupply,
       items,
       metas,
+      tokenURI,
     }
+    // console.log('====> product :', product)
   }
 
   const doBuyOrSell = async(item, actionName) => {
     if (item.isLoading) return
     item.isLoading = true
-
+    let theError = false
     const contract = await initContract('BuidlerProtocol', true)
-    const tx = await contract[actionName](item.itemId)
-    const rc = await tx.wait()
-    addSuccess(`${actionName} Success!`)
+    try {
+      const tx = await contract[actionName](item.itemId)
+      const rc = await tx.wait()
+    }
+    catch (err) {
+      theError = err
+    }
+
+    if (theError) {
+      actionName === 'buy' && addWarning('Insufficient balance of $BST')
+      actionName === 'sell' && addWarning(`Insufficient balance of token #${item.tokenId}`)
+    }
+    else {
+      addSuccess(`${actionName} Success!`)
+    }
     item.isListed = false
     item.isLoading = false
   }
@@ -204,16 +230,6 @@ export const mvStore = defineStore('mvStore', () => {
     posts = thePosts
   }
 
-  const encryptionSignature = async() => {
-    const publicKey = await signer.getAddress()
-    const messageRequested = (await lighthouse.getAuthMessage(publicKey)).data.message
-    const signedMessage = await signer.signMessage(messageRequested)
-    return ({
-      signedMessage,
-      publicKey,
-    })
-  }
-
   const showPostModal = (post) => {
     postModal.isLoading = false
     postModal.isShow = true
@@ -225,105 +241,50 @@ export const mvStore = defineStore('mvStore', () => {
     if (postModal.isLoading) return
     postModal.isLoading = true
 
-    postModal.statusText = 'fetchEncryptionKey from lighthouse'
-    const sig = await encryptionSignature()
+    postModal.statusText = 'Trying to decrypt the locked content'
 
-    const cid = postModal.post.content.hash
-    try {
-      const keyObject = await lighthouse.fetchEncryptionKey(
-        cid,
-        sig.publicKey,
-        sig.signedMessage,
-      )
-      const fileType = 'text/plain'
-      const decrypted = await lighthouse.decryptFile(cid, keyObject.data.key, fileType)
-      postModal.post.decrypted = await decrypted.text()
-    }
-    catch (err) {
-      postModal.statusText = err.message
-    }
+    const { encryptedSymmetricKey, encryptedString, accessControlConditions } = postModal.post.content
+    const { doDecryptString } = await litHelper({ chain, litNodeClient })
+    const { decryptedString, err } = await doDecryptString(encryptedSymmetricKey, encryptedString, accessControlConditions)
+    console.log('====={decryptedString, err, encryptedSymmetricKey, encryptedString, accessControlConditions}')
+    console.table({ decryptedString, err, encryptedSymmetricKey, encryptedString, accessControlConditions })
+    postModal.post.decrypted = decryptedString
+    postModal.statusText = ''
+
     postModal.isLoading = false
+    if (err)
+      postModal.statusText = err
   }
 
   const doSubmitCreateItem = async() => {
     if (form.isLoading) return
     form.isLoading = true
+    let content = form.description
 
-    const progressCallback = (progressData) => {
-      const percentageDone
-        = 100 - (progressData?.total / progressData?.uploaded)?.toFixed(2)
-      console.log(`progress ${percentageDone}`)
-    }
+    if (form.itemAccessNFTCount > 0) {
+      form.statusText = 'Add access condition'
+      const { doEncryptedString, generateCondition } = await litHelper({ chain, litNodeClient })
 
-    form.statusText = 'Upload content to lighthouse'
-
-    const parts = [
-      new Blob([form.description], {
-        type: 'text/plain',
-      }),
-    ]
-    const file = new File(parts, 'description.md', {
-      lastModified: Date.now(),
-      type: 'text/plain',
-    })
-
-    const event = {
-      persist: () => {},
-      target: {
-        files: [file],
-      },
-    }
-    let sig = await encryptionSignature()
-    const rzUpload = await lighthouse.uploadEncrypted(event,
-      sig.publicKey,
-      import.meta.env.VITE_LIGHTHOUSE_API_KEY,
-      sig.signedMessage,
-      progressCallback)
-    const hash = get(rzUpload, 'data.Hash')
-    const size = get(rzUpload, 'data.Size')
-
-    form.statusText = 'add access condition'
-
-    sig = await encryptionSignature()
-    // Hyperspace
-    const decryptConditions = [
-      {
-        id: 1,
-        chain: 'mumbai',
-        // id: '1',
-        // chain: 'Hyperspace',
-        method: 'balanceOf',
-        standardContractType: 'ERC1155',
+      const accessControlConditions = generateCondition({
         contractAddress: getContractAddress('BuidlerProtocol'),
-        returnValueTest: { comparator: '>=', value: form.itemAccessNFTCount },
-        parameters: [':userAddress', parseInt(form.tokenId)],
-      },
-    ]
-    const aggregator = '([1])'
-    let rzAddAc = ''
-    try {
-      rzAddAc = await lighthouse.accessCondition(
-        sig.publicKey,
-        hash,
-        sig.signedMessage,
-        decryptConditions,
-        aggregator,
-      )
-    }
-    catch (err) {
-      const errMsg = get(err, 'error.message', err)
-      console.log('====> errMsg, err :', errMsg, err)
-      return
-    }
+        walletAddress,
+        tokenId: form.tokenId,
+        unlockAmount: form.itemAccessNFTCount,
+      })
 
-    const content = {
-      sdk: 'lighthouse',
-      hash,
-      itemAccessNFTCount: form.itemAccessNFTCount,
-      size,
-    }
+      const {
+        encryptedString,
+        encryptedSymmetricKey,
+      } = await doEncryptedString(content, accessControlConditions)
+      content = {
+        encryptedString,
+        encryptedSymmetricKey,
+        accessControlConditions,
+        itemAccessNFTCount: form.itemAccessNFTCount,
+      }
 
-    form.statusText = 'store posts meta data'
+      form.statusText = 'Upload encrypted content to IPFS'
+    }
 
     const cid = await storeJson({
       userData,
@@ -332,16 +293,18 @@ export const mvStore = defineStore('mvStore', () => {
       excerpt: form.excerpt,
       content,
     })
+    // const { size } = await getStatus(cid)
 
-    form.statusText = 'add posts cid on chain with $FIL to pay for storage provider'
+    form.statusText = 'Add posts cid on chain with $FIL to pay for storage provider'
 
     const itemType = 'Post'
     const contract = await initContract('BuidlerProtocol', true)
-    const value = parseEther('0.001').mul(size)
+    // const value = parseEther('0.0000000000001').mul(size)
     const cidHexRaw = CID.parse(cid.replace('ipfs://', '')).toString(base16).substring(1)
     const cidRaw = `0x00${cidHexRaw}`
 
-    const tx = await contract.addItem(itemType, form.tokenId, cid, cidRaw, size, { value })
+    // const tx = await contract.addItem(itemType, form.tokenId, cid, cidRaw, size, { value })
+    const tx = await contract.addItem(itemType, form.tokenId, cid)
     const rc = await tx.wait()
 
     await updateTokenPosts(form.tokenId)
@@ -350,6 +313,76 @@ export const mvStore = defineStore('mvStore', () => {
     form.isLoading = false
     form.isShow = false
     form.statusText = 'Submitting, pls wait!'
+  }
+
+  let isUserItemsLoading = $ref(false)
+  const userOwnedMap = $ref({})
+  const getUserOwned = async(address) => {
+    if (userOwnedMap[address]?.length > 0) return userOwnedMap[address]
+    isUserItemsLoading = true
+    const rz = await contractRead('BuidlerProtocol', 'balanceOfTokensUserAllOwned', address)
+    const items = await Promise.all(rz.tokenIdArr.map(async(tokenId, index) => {
+      const tokenURI = rz.tokenURIArr[index]
+      const data = await getJson(tokenURI)
+      const tokenBalance = rz.tokenBalanceArr[index]
+      return {
+        ...data,
+        tokenURI,
+        tokenBalance,
+        tokenId,
+      }
+    }))
+    userOwnedMap[address] = items
+    isUserItemsLoading = false
+    return items
+  }
+
+  const userItems = $ref({})
+  const userItemsFuncNameMap = {
+    ask: 'getAskByOwner',
+    bid: 'getBidByOwner',
+    creation: 'getTokenListByOwner',
+  }
+  const getUserItems = async(dataType, address) => {
+    let items = get(userItems, `${dataType}.${address}`, [])
+    if (items.length > 0) return items
+
+    isUserItemsLoading = true
+    const rz = await contractRead('BuidlerProtocol', userItemsFuncNameMap[dataType], address, 0, 100)
+    switch (dataType) {
+      case 'ask':
+      case 'bid':
+        items = await Promise.all(rz.items.map(async(item, index) => {
+          const tokenURI = rz.tokenURIs[index]
+          const tokenInfo = await getJson(tokenURI)
+          return {
+            ...item,
+            ...tokenInfo,
+          }
+        }))
+        break
+      case 'creation':
+        items = await Promise.all(rz.tokenURIArr.map(async(tokenURI, index) => {
+          const tokenInfo = await getJson(tokenURI)
+          const tokenId = rz.tokenIdArr[index]
+          const totalSupply = rz.totalSupplyArr[index]
+          const maxSupply = rz.maxSupplyArr[index]
+          return {
+            ...tokenInfo,
+            tokenId,
+            totalSupply,
+            maxSupply,
+          }
+        }))
+        break
+    }
+
+    if (!userItems[dataType])
+      userItems[dataType] = {}
+    userItems[dataType][address] = items
+    isUserItemsLoading = false
+
+    return items
   }
 
   watchEffect(async() => {
@@ -366,15 +399,19 @@ export const mvStore = defineStore('mvStore', () => {
     currentTypeItems,
     form,
     product,
+    isUserItemsLoading,
     posts,
     postModal,
     doBuyOrSell,
+    getUserProfileLink,
     getTokenDataFromChain,
     updateListFromChain,
     doSubmitCreateItem,
     updateTokenPosts,
     showPostModal,
     doDecryptPostInModal,
+    getUserItems,
+    getUserOwned,
   })
 })
 
