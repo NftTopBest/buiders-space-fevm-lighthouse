@@ -12,10 +12,10 @@ A web3 way of creater space that like a web3 amazon!
 
 * Video Demo: loom link
 * Online demo
-  * mumbai
+  * Mumbai
     * demo: <https://www.buidlers.space>
     * contract: <https://mumbai.polygonscan.com/address/0x3Efb3F8F64e8C62594Ff02866a07e63e576436Fd>
-  * fevm
+  * Fevm hyperspace
     * demo: <https://hyperspace.buidlers.space>
     * contract: <https://hyperspace.filfox.info/en/address/0xfCB87c8BF0e9CDa86EEE939af64D6340F4562393>
   * Mantle
