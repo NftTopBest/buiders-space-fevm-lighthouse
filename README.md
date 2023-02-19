@@ -69,7 +69,7 @@ contract deploy on : <https://explorer.testnet.mantle.xyz/address/0xf495dD8D8B4e
 
 ## SDK we use
 
-### [Web3MQ](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/web3MQStore.ts)
+### Web3MQ [code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/web3MQStore.ts)
 
 ## Problem
 
