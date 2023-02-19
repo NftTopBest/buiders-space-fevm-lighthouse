@@ -6,7 +6,7 @@ A multiple chain supported nft space that can create/trade/buy/bid/ask NFT stuff
 
 A web3 way of creater space that like a web3 amazon!
 
-<img src="./screenshot.png" />
+<img src="./screenshot-1.png" />
 
 ## Links
 
@@ -40,6 +40,8 @@ A web3 way of creater space that like a web3 amazon!
 * User can bid/ask of the NFT
 * User can sell/buy order in the nft market
 * User can click on the top right email btn to go to the Web3MQ Chat dashboard to see all of the Channel they have
+
+<img src="./screenshot-2.png" />
 
 ## Technologies I used
 
