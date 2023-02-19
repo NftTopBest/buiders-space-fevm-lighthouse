@@ -14,12 +14,14 @@ A beach is a landform alongside a body of water which consists of loose particle
 
 ## title
 
-Great view here!
+Great view here! the island I live
 
 ## desc
 
-require 2 nft to unlock the great view more content
+It's beautiful, right? require 2 nft to unlock the great view more content
 
 ## encrypted content
+
+Keep it secret that no one know this except you!
 
 ok, we just have the text here, but later we can have video/photo/audio uploader that make the content greater!
