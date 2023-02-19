@@ -1,4 +1,4 @@
-# buiders-space-all in one web3 NFT space
+# Buiders.Space All in one web3 NFT space
 
 The all-in-one web3 space for Creators & Brands with NFT create/mint/trade/token gating/De-Social features.
 
