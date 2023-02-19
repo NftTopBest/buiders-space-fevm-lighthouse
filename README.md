@@ -16,7 +16,7 @@ A web3 way of creater space that like a web3 amazon!
     * demo: <https://www.buidlers.space>
     * contract: <https://mumbai.polygonscan.com/address/0x3Efb3F8F64e8C62594Ff02866a07e63e576436Fd>
   * Fevm hyperspace
-    * demo: <https://hyperspace.buidlers.space>
+    * demo: <https://hyperspace.buidlers.space> (TBD)
     * contract: <https://hyperspace.filfox.info/en/address/0xfCB87c8BF0e9CDa86EEE939af64D6340F4562393>
   * Mantle
     * demo: <https://mantletestnet.buidlers.space/>
@@ -50,6 +50,8 @@ A web3 way of creater space that like a web3 amazon!
 
 While develop the `BuidlerProtocol` contract, it has so many function that it exceed the 24KB size limit.
 Then we find out the greate `EIP2535` that help us to build unlimited size of our contract code.
+
+<img src="./protocol.png" />
 
 ## Have you validated the problem you are attacking and/or the solution?
 
@@ -96,6 +98,8 @@ NFT Revolution: Redefined what the NFT should be
 * Membership NFT as a Gating
 * Fit for every industry in the real world
 
+<img src="./how.png" />
+
 ### FEVM DataDAO
 
 we use the FEVM Actor API in our smart contract to pay storage fee while builder add new item for their NFT build, and SP can activateDealBySP and withdrawReward. It depends the HyperActor from the @zondax/filecoin-solidity
@@ -111,9 +115,3 @@ decrypted content: <https://github.com/NftTopBest/buiders-space-fevm-lighthouse/
 ### EIP2535 to build large contract <https://eips.ethereum.org/EIPS/eip-2535>
 
 Our contract is large, so we use the Diamond Tech to build our smart contract: use the diamond cut func to deploy more facts: <https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/contracts/DiamondCutFacet.sol>
-
-## Deploy result
-
-* online demo: <https://www.buidlers.space/fevm/buidlers>
-* BuidlerProtocol contract(EIP2535): <https://hyperspace.filfox.info/en/address/0x9Fe9b4E2C0107546c6421fe88847332B53C06359>
-* Negentropy contract: <https://hyperspace.filfox.info/en/address/0xBb0658eCB49e0d09756E0cA879492B8553E6DcB8>
