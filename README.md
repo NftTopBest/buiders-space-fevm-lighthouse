@@ -39,6 +39,7 @@ A web3 way of creater space that like a web3 amazon!
 * Consumers can mint NFT to access the token gating content with this NFT
 * User can bid/ask of the NFT
 * User can sell/buy order in the nft market
+* User can click on the top right email btn to go to the Web3MQ Chat dashboard to see all of the Channel they have
 
 ## Technologies I used
 
