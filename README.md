@@ -6,25 +6,51 @@ A multiple chain supported nft space that can create/trade/buy/bid/ask NFT stuff
 
 ## Links
 
-* [Online demo(mumbai testnet)](https://www.buidlers.space)
-  * [FEVM Chain(hyperspace) Support](https://fevm.buidlers.space)
-  * [Moonbean Chain(testnet) Support](https://fevm.buidlers.space)
+* [Online demo]
+  * mumbai
+    * demo: <https://www.buidlers.space>
+    * contract: <https://mumbai.polygonscan.com/address/0x3Efb3F8F64e8C62594Ff02866a07e63e576436Fd>
+  * fevm
+    * demo: <https://fevm.buidlers.space>
+    * contract:
+  * Mantle
+    * demo: <https://mantletestnet.buidlers.space/>
+    * contract:
 * [All screenshots](./screenshot/)
 * [Pitch Deck](./buidlers-space.pdf)
 
-## Application Tech Stack
+## Technologies I used
 
-* [x] ERC1155
-* [x] EIP2535
-* [x] IPFS
-* [x] Hardhat
-* [x] Vercel
-* [x] TailwindCSS
-* [x] Vue3
-* [x] Pinia (state store)
-* [x] PWA
-* [x] Vue-i18n
-* [x] Vite2
+* EIP2535
+* ERC1155
+* Vue3
+* Hardhat
+* Multiple Chain support: Moonbean / Mantle / mumbai / bsc / fevm
+* TailwindCSS
+* WindiCSS
+* PWA
+* IPFS(nft.storage)
+* Vercel
+* QuickNode
+
+## Challenges I ran into
+
+While develop the `BuidlerProtocol` contract, it has so many function that it exceed the 24KB size limit.
+Then we find out the greate `EIP2535` that help us to build unlimited size of our contract code.
+
+## Have you validated the problem you are attacking and/or the solution?
+
+We can see a lot of web2 brands try to involved into web3, that's why we believe it's time to push the market forward by us
+
+## Polygon
+
+we build an NFT ecosystem that help creators to create on polygon chain
+contract deploy on: <https://mumbai.polygonscan.com/address/0x3Efb3F8F64e8C62594Ff02866a07e63e576436Fd>
+
+## Mantle
+
+We use mantle testnet and  deploy on <https://mantletestnet.buidlers.space/>
+contract deploy on : <https://explorer.testnet.mantle.xyz/address/0xf495dD8D8B4e38bdcF811B39A19eb2b1f9E24686>
 
 ## SDK we use
 
@@ -38,7 +64,24 @@ Builder will continue add new build on the NFT, so their users(buyer) can mint N
 
 While builder add new build for his/her NFT projects, they need to add the cidRaw and size, so later the SP can call activateDealBySP to activate the deal, then call the withdrawReward with cidRaw to get the reward.
 
-## How it's Made
+* A lot of NFT list on OpenSea/X2Y2 with different contracts and data flow
+* Users fall into lots of Ponzi projects without value
+* Launch a DAO require a lot of complicate tech stuff to use for Web2 users
+* There is no standard no-tech token gating solution for Web2 users yet
+
+## Opportunity
+
+Getting producers and consumers together all to web3 in a unified verse can help the productive economic more decentral
+While taking a very tiny transaction friction fee can be incredibly profitable as more users join in
+
+## Solution
+
+NFT Revolution: Redefined what the NFT should be
+
+* No Code DAO Creation
+* Community Tokenized Building
+* Membership NFT as a Gating
+* Fit for every industry in the real world
 
 ### FEVM DataDAO
 
