@@ -30,6 +30,7 @@ A web3 way of creater space that like a web3 amazon!
 ## Features
 
 * Creators/Producers can create an new ERC1155 NFT as their project
+  * Also create a new Web3MQ chat group at the same time to bind on this NFT
 * Consumers can mint NFT to buy the creator
 
 ## Technologies I used
