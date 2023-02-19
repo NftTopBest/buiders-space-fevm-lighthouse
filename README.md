@@ -1,23 +1,36 @@
-# buiders-space-fevm-lighthouse
+# buiders-space-all in one web3 NFT space
 
-A multiple chain supported nft space that can create/trade/buy/bid/ask NFT stuff! A web3 way of creater space that like a web3 amazon!
+The all-in-one web3 space for Creators & Brands with NFT create/mint/trade/token gating/De-Social features.
+
+A multiple chain supported nft space that can create/trade/buy/bid/ask NFT stuff!
+
+A web3 way of creater space that like a web3 amazon!
 
 <img src="./screenshot.png" />
 
 ## Links
 
-* [Online demo]
+* Video Demo: loom link
+* Online demo
   * mumbai
     * demo: <https://www.buidlers.space>
     * contract: <https://mumbai.polygonscan.com/address/0x3Efb3F8F64e8C62594Ff02866a07e63e576436Fd>
   * fevm
-    * demo: <https://fevm.buidlers.space>
-    * contract:
+    * demo: <https://hyperspace.buidlers.space>
+    * contract: <https://hyperspace.filfox.info/en/address/0xfCB87c8BF0e9CDa86EEE939af64D6340F4562393>
   * Mantle
     * demo: <https://mantletestnet.buidlers.space/>
-    * contract:
+    * contract: <https://explorer.testnet.mantle.xyz/address/0xf495dD8D8B4e38bdcF811B39A19eb2b1f9E24686>
+  * BSC Testnet
+    * demo: <https://bsctestnet.buidlers.space/>
+    * contract: <https://testnet.bscscan.com/address/0x268ab9c820c94c18ac8293e2e239bf0af1bd8f91>
 * [All screenshots](./screenshot/)
 * [Pitch Deck](./buidlers-space.pdf)
+
+## Features
+
+* Creators/Producers can create an new ERC1155 NFT as their project
+* Consumers can mint NFT to buy the creator
 
 ## Technologies I used
 
