@@ -24,7 +24,7 @@ A web3 way of creater space that like a web3 amazon!
   * BSC Testnet
     * demo: <https://bsctestnet.buidlers.space/>
     * contract: <https://testnet.bscscan.com/address/0x268ab9c820c94c18ac8293e2e239bf0af1bd8f91>
-* [All screenshots](./screenshot/)
+* [All screenshots](./screenshots/)
 * [Pitch Deck](./buidlers-space.pdf)
 
 ## Features
