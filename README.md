@@ -29,9 +29,16 @@ A web3 way of creater space that like a web3 amazon!
 
 ## Features
 
+* We have the $BST(Buidler Stable Token) faucet not for user to test
+* User can update their profile, check their social home page with Feed(get data from lens) / Creation / Bid order / Ask order
+* On the KBL page, we can see the user list currently already add on to the chain
+* Click on the user's avatar can get to the user's home page
 * Creators/Producers can create an new ERC1155 NFT as their project
   * Also create a new Web3MQ chat group at the same time to bind on this NFT
-* Consumers can mint NFT to buy the creator
+* Creator can create new item for this NFT with token gating condition
+* Consumers can mint NFT to access the token gating content with this NFT
+* User can bid/ask of the NFT
+* User can sell/buy order in the nft market
 
 ## Technologies I used
 
