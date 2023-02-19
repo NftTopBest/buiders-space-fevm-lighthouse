@@ -10,7 +10,7 @@ A web3 way of creater space that like a web3 amazon!
 
 ## Links
 
-* Video Demo: loom link
+* Video Demo: <https://www.loom.com/share/da4b6b48d2a04d78ae62923ff6342cf0>
 * Online demo
   * Mumbai
     * demo: <https://www.buidlers.space>
