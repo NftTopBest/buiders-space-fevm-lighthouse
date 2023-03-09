@@ -8,7 +8,7 @@ A web3 way of creater space that like a web3 amazon!
 
 <img src="./screenshot-1.png" />
 
-## Features Develep duiring the CyberConnect Hackathon
+## Features Develep duiring the CyberConnect 2023 Hackathon
 
 * Integration with ccProfile:
   * While Creator create new NFT for creation, we create a new Profile for this creation and bind on the NFT page [code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/components/mv/Buidler/CreateNFT/CCProfile.vue#L16)
