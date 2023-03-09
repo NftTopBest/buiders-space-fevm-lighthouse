@@ -32,13 +32,33 @@ A web3 way of creater space that like a web3 amazon!
 * Integration with ccProfile:
   * While Creator create new NFT for creation, we create a new Profile for this creation and bind on the NFT page [code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/components/mv/Buidler/CreateNFT/CCProfile.vue#L16)
 * Integration with Create essence.
+  * Creator create new content for Creation NFT, will create a new Essence NFT(SBT), that user can collect it but can not transfer to others
+    * [create post and create essence NFT gasless code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/mvStore.ts#L317-L336)
+* Integration with livepeer and LitProtocol
+  * Create token gating live stream and user can unlock by mint creation NFT or collect the Essence NFT(SBT)
+    * [create live peer code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/mvStore.ts#L338-L341)
+    * [token gating code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/mvStore.ts#L345-L368)
 * Integration with Collect essence.
+  * user can collect essence NFT on content page [code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/components/cc/collect/btn.vue#L19-L21)
 * Integration with Post.
   * Create post to bind to the creation NFT, so user can comment on the creation NFT [code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/createNFTStore.ts#L111)
+  * Every content item also attach and Post for it to user to comment on it
+    * [create post attach to it code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/mvStore.ts#L317-L321)
 * Integration with Comment.
+  * [comment on post code for article](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/pages/massverse/%5BchainName%5D/buidlers/build/%5Bid%5D/%5BarticleId%5D.vue#L117)
+  * [comment on user's page code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/pages/massverse/%5BchainName%5D/buidlers/user/%5Baddress%5D/%5Btype%5D.vue#L65)
+  * [the post list component code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/components/mv/Buidler/User/Post/List.vue)
+  * [the comment list component code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/components/mv/Buidler/User/Post/Item.vue)
 * Integration with Subscribe.
+  * user can subscribe on the user page
+    * [integate on user's home page code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/components/mv/Buidler/User/Head.vue#L47)
+    * [subscribe component code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/components/cc/subscribe/btn.vue)
 * Integration with Follow.
+  * user can follow on the user page
+    * [integate on user's home page code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/components/mv/Buidler/User/Head.vue#L48)
+    * [follow component code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/components/cc/follow/btn.vue)
 * Integration with Like.
+  * [like on comment code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/components/mv/Buidler/User/Post/Item.vue#L40)
 
 ## Future Roadmap
 
