@@ -10,33 +10,20 @@ import {
 } from '@heroicons/vue/24/outline'
 import { CID } from 'multiformats/cid'
 import { base16 } from 'multiformats/bases/base16'
+import { doCreateStream } from '~/composables/useLivepeer'
+
 const tokenIdArr = []
 const tagsKeyByType = {}
 
 export const mvStore = defineStore('mvStore', () => {
   const { initContract, walletAddress, addSuccess, addWarning, userData, getContractAddress, contractRead } = $(web3AuthStore())
+  const { callCCApiMethod, doCreateEssenceNFTGasless } = $(ccStore())
   const { getJson, getStatus, storeJson } = $(useNFTStorage())
   const route = useRoute()
+  const router = useRouter()
   const chain = CHAIN_NAME
   const litNodeClient = inject('litNodeClient')
-  const chainName = $computed(() => route?.params.chainName || 'mumbai')
-  const typeSlug = $computed(() => route?.params.type)
-  let product = $ref({})
-  const postModal = $ref({
-    post: {},
-  })
-  let posts = $ref([])
-  const form = $ref({
-    isShow: false,
-    description: '',
-    isLoading: false,
-    title: '',
-    tokenId: '',
-    image: '',
-    itemAccessNFTCount: 0,
-    excerpt: '',
-    statusText: 'Submitting, pls wait!',
-  })
+  const chainName = $computed(() => route?.params.chainName || CHAIN_NAME || 'mumbai')
 
   const typeList = $ref([
     {
@@ -89,6 +76,38 @@ export const mvStore = defineStore('mvStore', () => {
     },
   ])
 
+  const typeSlug = $computed(() => route?.params.type)
+  let product = $ref({})
+  const author = $computed(() => get(product, 'author', {}))
+
+  const theType = $computed(() => get(product, 'properties.tags.type', ''))
+  const theTypeLink = $computed(() => {
+    const _type = typeList.find(item => item.name === theType)
+    return _type?.href
+  })
+
+  const ccProfileHandle = $computed(() => get(product, 'properties.ccProfileHandle', ''))
+
+  const postModal = $ref({
+    post: {},
+  })
+  let posts = $ref([])
+  const form = $ref({
+    isShow: false,
+    description: '',
+    isLoading: false,
+    title: '',
+    tokenId: '',
+    image: '',
+    totalSupply: '',
+    theSymbol: '',
+    price: '',
+    itemAccessNFTCount: '1',
+    excerpt: '',
+    statusText: 'Submitting, pls wait!',
+    type: 'article',
+  })
+
   const items = $ref([])
 
   const currentType = $computed(() => {
@@ -103,6 +122,11 @@ export const mvStore = defineStore('mvStore', () => {
   const currentTypeItems = $computed(() => {
     return items.filter(item => item.tokenType === currentType?.name)
   })
+
+  const getBuidlerInfo = async(address) => {
+    const authorCid = await contractRead('BuidlerProtocol', 'getBuidler', address)
+    return getJson(authorCid)
+  }
   const updateListFromChain = async() => {
     const contractReader = await initContract('BuidlerProtocol')
     const start = 0
@@ -175,10 +199,8 @@ export const mvStore = defineStore('mvStore', () => {
     const tokenData = await getJson(tokenURI)
     const createdBy = get(tokenData, 'properties.createdBy')
     let author = {}
-    if (createdBy) {
-      const authorCid = await contractReader.getBuidler(createdBy)
-      author = await getJson(authorCid)
-    }
+    if (createdBy)
+      author = await getBuidlerInfo(createdBy)
 
     product = {
       ...tokenData,
@@ -207,6 +229,7 @@ export const mvStore = defineStore('mvStore', () => {
     }
 
     if (theError) {
+      console.log('====> theError :', theError)
       actionName === 'buy' && addWarning('Insufficient balance of $BST')
       actionName === 'sell' && addWarning(`Insufficient balance of token #${item.tokenId}`)
     }
@@ -230,6 +253,20 @@ export const mvStore = defineStore('mvStore', () => {
     posts = thePosts
   }
 
+  const getTokenPost = async(tokenId, index) => {
+    let thePosts = await contractRead('BuidlerProtocol', 'getItems', tokenId, index, 1, 'Post')
+    thePosts = await Promise.all(thePosts.map(async(cid) => {
+      const data = await getJson(cid)
+      const status = await getStatus(cid)
+      return {
+        ...data,
+        cid,
+        created: status.created,
+      }
+    }))
+    return thePosts[0]
+  }
+
   const showPostModal = (post) => {
     postModal.isLoading = false
     postModal.isShow = true
@@ -246,8 +283,8 @@ export const mvStore = defineStore('mvStore', () => {
     const { encryptedSymmetricKey, encryptedString, accessControlConditions } = postModal.post.content
     const { doDecryptString } = await litHelper({ chain, litNodeClient })
     const { decryptedString, err } = await doDecryptString(encryptedSymmetricKey, encryptedString, accessControlConditions)
-    console.log('====={decryptedString, err, encryptedSymmetricKey, encryptedString, accessControlConditions}')
-    console.table({ decryptedString, err, encryptedSymmetricKey, encryptedString, accessControlConditions })
+    // console.log('====={decryptedString, err, encryptedSymmetricKey, encryptedString, accessControlConditions}')
+    // console.table({ decryptedString, err, encryptedSymmetricKey, encryptedString, accessControlConditions })
     postModal.post.decrypted = decryptedString
     postModal.statusText = ''
 
@@ -256,9 +293,53 @@ export const mvStore = defineStore('mvStore', () => {
       postModal.statusText = err
   }
 
+  const doDecryptPost = async({ encryptedSymmetricKey = '', encryptedString = '', accessControlConditions = [] }) => {
+    const { doDecryptString } = await litHelper({ chain, litNodeClient })
+    const { decryptedString, err } = await doDecryptString(encryptedSymmetricKey, encryptedString, accessControlConditions)
+    // console.log('====={decryptedString, err, encryptedSymmetricKey, encryptedString, accessControlConditions}')
+    // console.table({ decryptedString, err, encryptedSymmetricKey, encryptedString, accessControlConditions })
+
+    if (err)
+      console.error(err)
+    return decryptedString
+  }
+
   const doSubmitCreateItem = async() => {
     if (form.isLoading) return
-    form.isLoading = true
+    // form.isLoading = true
+    const title = form.title
+    const excerpt = form.excerpt
+    const image = form.image
+    const theSymbol = form.theSymbol
+    const totalSupply = form.totalSupply
+    const amount = parseEther(form.price).toString()
+
+    const ccPost = await callCCApiMethod('createPost', {
+      title: `tokenId:${form.tokenId}-postId:${posts.length}`,
+      body: excerpt,
+      author: ccProfileHandle,
+    })
+
+    const handle = get(product, 'properties.ccProfileHandle', '')
+    const createSBTRz = await doCreateEssenceNFTGasless({
+      title,
+      description: form.excerpt,
+      handle,
+      image,
+      theSymbol,
+      totalSupply,
+      amount,
+    })
+    if (createSBTRz.err) {
+      addWarning(createSBTRz.err)
+      return
+    }
+
+    if (form.type === 'liveroom') {
+      const { playbackId, streamKey } = await doCreateStream({ name: 'liveroom' })
+      form.description = playbackId
+      form.streamKey = streamKey
+    }
     let content = form.description
 
     if (form.itemAccessNFTCount > 0) {
@@ -276,6 +357,7 @@ export const mvStore = defineStore('mvStore', () => {
         encryptedString,
         encryptedSymmetricKey,
       } = await doEncryptedString(content, accessControlConditions)
+
       content = {
         encryptedString,
         encryptedSymmetricKey,
@@ -288,20 +370,29 @@ export const mvStore = defineStore('mvStore', () => {
 
     const cid = await storeJson({
       userData,
-      title: form.title,
-      image: form.image,
-      excerpt: form.excerpt,
+      title,
+      image,
+      excerpt,
+      type: form.type,
+      streamKey: form.type === 'liveroom' ? form.streamKey : undefined,
       content,
+      ccPost,
+      ccProfileHandle,
+      ccSBT: {
+        ...createSBTRz,
+        price: form.price,
+        totalSupply,
+      },
     })
     // const { size } = await getStatus(cid)
 
-    form.statusText = 'Add posts cid on chain with $FIL to pay for storage provider'
+    form.statusText = 'Add posts cid on chain to pay for storage provider'
 
     const itemType = 'Post'
     const contract = await initContract('BuidlerProtocol', true)
     // const value = parseEther('0.0000000000001').mul(size)
-    const cidHexRaw = CID.parse(cid.replace('ipfs://', '')).toString(base16).substring(1)
-    const cidRaw = `0x00${cidHexRaw}`
+    // const cidHexRaw = CID.parse(cid.replace('ipfs://', '')).toString(base16).substring(1)
+    // const cidRaw = `0x00${cidHexRaw}`
 
     // const tx = await contract.addItem(itemType, form.tokenId, cid, cidRaw, size, { value })
     const tx = await contract.addItem(itemType, form.tokenId, cid)
@@ -311,8 +402,8 @@ export const mvStore = defineStore('mvStore', () => {
     addSuccess('Success!')
 
     form.isLoading = false
-    form.isShow = false
     form.statusText = 'Submitting, pls wait!'
+    router.replace(`/${chainName}/buidlers/build/${route.params.id}`)
   }
 
   let isUserItemsLoading = $ref(false)
@@ -402,14 +493,21 @@ export const mvStore = defineStore('mvStore', () => {
     isUserItemsLoading,
     posts,
     postModal,
+    ccProfileHandle,
+    theType,
+    author,
+    theTypeLink,
+    getBuidlerInfo,
     doBuyOrSell,
     getUserProfileLink,
     getTokenDataFromChain,
     updateListFromChain,
     doSubmitCreateItem,
     updateTokenPosts,
+    getTokenPost,
     showPostModal,
     doDecryptPostInModal,
+    doDecryptPost,
     getUserItems,
     getUserOwned,
   })
