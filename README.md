@@ -29,7 +29,16 @@ A web3 way of creater space that like a web3 amazon!
 
 ## Features Develep duiring the CyberConnect Hackathon
 
-* Integration with ccProfile 
+* Integration with ccProfile:
+  * While Creator create new NFT for creation, we create a new Profile for this creation and bind on the NFT page [code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/components/mv/Buidler/CreateNFT/CCProfile.vue#L16)
+* Integration with Create essence.
+* Integration with Collect essence.
+* Integration with Post.
+  * Create post to bind to the creation NFT, so user can comment on the creation NFT [code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/createNFTStore.ts#L111)
+* Integration with Comment.
+* Integration with Subscribe.
+* Integration with Follow.
+* Integration with Like.
 
 ## Future Roadmap
 

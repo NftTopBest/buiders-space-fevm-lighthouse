@@ -10,7 +10,7 @@ const route = useRoute()
 const marketType = $computed(() => route.params.type)
 
 const { contractRead, getJson } = $(web3AuthStore())
-const { doBuyOrSell } = $(mvStore())
+const { doBuyOrSell, getBuidlerInfo, getUserProfileLink } = $(mvStore())
 
 let items = $ref([])
 let isLoading = $ref(false)
@@ -18,12 +18,14 @@ watchEffect(async() => {
   isLoading = true
   const rz = await contractRead('BuidlerProtocol', 'getMarketItemsByType', marketType, 0, 100)
   const tokenURIs = await Promise.all(rz.tokenURIs.map(cid => getJson(cid)))
-  items = rz.items.map((item, index) => {
+  items = await Promise.all(rz.items.map(async(item, index) => {
+    const userData = await getBuidlerInfo(item.createdBy)
     return {
       ...item,
       tokenInfo: tokenURIs[index],
+      userData,
     }
-  })
+  }))
   isLoading = false
 })
 
@@ -61,11 +63,16 @@ watchEffect(async() => {
                 <span class="sr-only">View details for {{ item.tokenInfo.name }}</span>
               </button>
             </router-link>
-            <p class="font-medium mt-2 text-sm text-gray-900 pointer-events-none block truncate">
+            <p class="font-medium my-2 text-sm text-gray-900 pointer-events-none block truncate">
               #{{ item.itemId }} {{ item.tokenInfo.name }}
             </p>
-            <p class="font-medium text-sm mb-4 text-gray-500 pointer-events-none block">
-              {{ formatEther(item.unitPrice) }} $BST x {{ item.amount }}
+            <p class="flex font-medium text-sm mb-4 text-gray-500 items-center justify-between pointer-events-none block">
+              <router-link :to="getUserProfileLink(item?.userData?.walletAddress)" class="flex-shrink-0">
+                <IpfsImg class="rounded-full object-cover h-10 w-10" :src="item?.userData?.avatar" alt="" />
+              </router-link>
+              <span class="font-bold text-indigo-500">
+                {{ formatEther(item.unitPrice) }} $BST x {{ item.amount }}
+              </span>
             </p>
             <btn-indigo v-if="marketType === 'bid'" :is-loading="item.isLoading" class="w-full" @click="doBuyOrSell(item, 'sell')">
               Sell

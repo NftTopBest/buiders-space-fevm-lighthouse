@@ -44,7 +44,7 @@ watchEffect(async() => {
       <ul v-else role="list" class="mx-auto my-32 grid gap-x-16 gap-y-16 grid-cols-1 sm:grid-cols-2 lg:mx-0 lg:grid-cols-4">
         <li v-for="item in items" :key="item.walletAddress">
           <router-link :to="getUserProfileLink(item.walletAddress)" class="cursor-pointer hover:opacity-80">
-            <IpfsImg class="rounded-full mx-auto h-56 w-56" :src="item.avatar" alt="" />
+            <IpfsImg class="rounded-full mx-auto object-cover h-56 w-56" :src="item.avatar" alt="" />
             <h3 class="font-semibold mt-6 text-base tracking-tight text-gray-900 leading-7">
               {{ item.name }}
             </h3>
