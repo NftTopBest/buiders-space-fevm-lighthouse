@@ -1,19 +1,19 @@
 <template>
-  <footer class="bg-white">
+  <footer class="bg-gray-50 opacity-90">
     <div class="mx-auto max-w-7xl py-10 px-8 overflow-hidden">
-      <nav class="-mb-6 sm:flex columns-2 sm:space-x-12 sm:justify-center" aria-label="Footer">
+      <!-- <nav class="-mb-6 sm:flex columns-2 sm:space-x-12 sm:justify-center" aria-label="Footer">
         <div v-for="item in navigation.main" :key="item.name" class="pb-6">
           <a :href="item.href" class="text-base text-gray-600 leading-6 hover:text-gray-900">{{ item.name }}</a>
         </div>
       </nav>
-      <!-- <div class="flex space-x-10 mt-10 justify-center">
+      <div class="flex space-x-10 mt-10 justify-center">
         <a v-for="item in navigation.social" :key="item.name" :href="item.href" class="text-gray-400 hover:text-gray-500">
           <span class="sr-only">{{ item.name }}</span>
           <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
         </a>
       </div> -->
       <p class="mt-6 text-center text-base text-gray-500 leading-5">
-        &copy; 2023 MassVerse.Space. All rights reserved.
+        &copy; 2023 Buidlers.Space. All rights reserved.
       </p>
     </div>
   </footer>

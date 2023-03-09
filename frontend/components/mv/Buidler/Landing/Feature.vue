@@ -3,33 +3,33 @@ import { BoltIcon, DevicePhoneMobileIcon, GlobeAltIcon, ScaleIcon } from '@heroi
 
 const features = [
   {
-    name: 'Competitive exchange rates',
+    name: 'No Code DAO Creation',
     description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+      'Get ready to launch your Buidlers DAO in minutes! No technical coding skill is required. All you need is a few clicks and passion to create a community of like-minded people.',
     icon: GlobeAltIcon,
   },
   {
-    name: 'No hidden fees',
+    name: 'Build Tokenized Community',
     description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+      'Turn your community members into entrepreneurs, create a network of projects, products, companies, and sub-communities that are working toward propagating a common mission.',
     icon: ScaleIcon,
   },
   {
-    name: 'Transfers are instant',
+    name: 'Create shared prosperity',
     description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+      'Raise funds from within your community and create shared prosperity. Our platform enables you to use membership NFT as the catalyst for web3 fundraising in a secure, decentralized and transparent way.',
     icon: BoltIcon,
   },
   {
-    name: 'Mobile notifications',
+    name: 'Create Web3 Experiences',
     description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+      'Your community is much more than a consumer network. Learn how to make them your greatest collaborators. Work collaboratively to build games, movies, music, real estate, fitness, sports, and more.',
     icon: DevicePhoneMobileIcon,
   },
 ]
 </script>
 <template>
-  <div class="bg-gray-50 py-24 sm:py-32 lg:py-40">
+  <div class="py-12 sm:py-16 lg:py-20">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="sm:text-center">
         <p class="font-bold mt-2 tracking-tight text-3xl text-gray-900 sm:text-4xl">

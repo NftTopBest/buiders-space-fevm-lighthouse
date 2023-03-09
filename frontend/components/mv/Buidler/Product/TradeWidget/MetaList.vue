@@ -11,6 +11,7 @@ const {
 const tokenId = inject('tokenId')
 const { contractRead } = $(web3AuthStore())
 const { getJson, getStatus } = $(useNFTStorage())
+const { getUserProfileLink, getBuidlerInfo } = $(mvStore())
 
 let jsonItems = $ref([])
 watchEffect(async() => {
@@ -18,6 +19,7 @@ watchEffect(async() => {
   jsonItems = await Promise.all(items.map(async(cid) => {
     const data = await getJson(cid)
     data.cid = cid
+    data.userData = await getBuidlerInfo(data.createdBy)
 
     return data
   }))
@@ -40,12 +42,14 @@ watchEffect(async() => {
           <ul role="list" class="space-y-8 ">
             <li v-for="item in jsonItems" :key="item.cid">
               <div class="flex space-x-3">
-                <div class="flex-shrink-0">
-                  <IpfsImg class="rounded-full h-10 w-10" :src="item.userData.avatar" alt="" />
-                </div>
+                <router-link :to="getUserProfileLink(item?.userData?.walletAddress)" class="flex-shrink-0">
+                  <IpfsImg class="rounded-full object-cover h-10 w-10" :src="item.userData.avatar" alt="" />
+                </router-link>
                 <div class="flex-1">
                   <div class="flex text-sm justify-between">
-                    <a href="#" class="font-medium text-gray-900">{{ item.userData.name }}</a>
+                    <router-link :to="getUserProfileLink(item?.userData?.walletAddress)" class="font-medium text-gray-900">
+                      {{ item.userData.name }}
+                    </router-link>
                     <span class="font-medium text-gray-500">
                       <UseTimeAgo v-if="item.created" v-slot="{ timeAgo }" :time="item.created">
                         {{ timeAgo }} {{ commentType }} x {{ item.amount }}
@@ -54,7 +58,7 @@ watchEffect(async() => {
                     </span>
                   </div>
                   <div class="mt-1 text-sm text-gray-700">
-                    <p>{{ item.content }}</p>
+                    <p>{{ item?.content }}</p>
                   </div>
                 </div>
               </div>

@@ -4,7 +4,7 @@ form.tokenId = inject('tokenId')
 </script>
 <template>
   <DialogWide :show="form.isShow" @close="form.isShow = false">
-    <Loading v-if="form.isLoading" class="p-10" :text="form.statusText"/>
+    <Loading v-if="form.isLoading" class="p-10" :text="form.statusText" />
     <div v-else>
       <div class="p-3">
         <div class="mt-3 text-center sm:mt-5">
@@ -31,7 +31,7 @@ form.tokenId = inject('tokenId')
             <textarea id="about" v-model="form.excerpt" name="about" rows="3" class="rounded-md border-gray-300 shadow-sm mt-1 w-full p-2 block sm:text-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Brief description for the item" />
           </p>
           <p class="flex mt-2 text-2xl text-gray-900">
-            <EditorDefault v-model="form.description" height="324px" placeholder="The content that keep secrect(entryption and access controall by lighthouse.storage)" />
+            <EditorDefault v-model="form.description" height="324px" placeholder="The content that keep secrect on Chain" />
           </p>
         </div>
         <btn-indigo class="mt-4 w-full" @click="doSubmitCreateItem">

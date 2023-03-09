@@ -48,25 +48,32 @@ const doSubmit = async() => {
   isLoading = false
 }
 
+const totalCost = $computed(() => amount * unitPrice)
+
 </script>
 <template>
-  <div>
-    <div class="mt-15">
-      <div class="sm:col-span-4">
-        <label for="amount" class="font-medium text-sm text-gray-700 block">Amount</label>
+  <div class="flex flex-col h-full">
+    <div class="flex flex-1 mt-5 justify-around">
+      <div class="w-1/2">
+        <label for="amount" class="font-medium text-sm text-gray-500 block">Bid Amount</label>
         <div class="rounded-md flex shadow-sm mt-1">
           <input id="amount" v-model="amount" type="text" name="amount" autocomplete="amount" class="rounded-md border-gray-300 flex-1 w-full min-w-0 block sm:text-sm focus:border-indigo-500 focus:ring-indigo-500">
         </div>
       </div>
-      <div class="mt-4 sm:col-span-4">
-        <label for="unitPrice" class="font-medium text-sm text-gray-700 block">Unit Price</label>
+      <div>
+        <label for="unitPrice" class="font-medium text-sm text-gray-500 block">Unit Price</label>
         <div class="rounded-md flex shadow-sm mt-1">
           <input id="unitPrice" v-model="unitPrice" type="text" name="unitPrice" autocomplete="unitPrice" class="rounded-none rounded-l-md border-gray-300 flex-1 w-full min-w-0 block sm:text-sm focus:border-indigo-500 focus:ring-indigo-500">
-          <span class="border rounded-r-md bg-gray-50 border-l-0 border-gray-300 px-3 text-gray-500 inline-flex items-center sm:text-sm">$NST</span>
+          <span class="border rounded-r-md bg-gray-50 border-l-0 border-gray-300 px-3 text-gray-500 inline-flex items-center sm:text-sm">$BST</span>
         </div>
       </div>
     </div>
-
+    <div class="py-4 px-2 text-gray-600">
+      <div class="flex font-bold border-b-2 border-gray-200 py-6 justify-between">
+        <span>Total Cost</span>
+        <span>{{ totalCost }} $BST</span>
+      </div>
+    </div>
     <btn-indigo :is-loading="isLoading" class="mt-10 w-full py-3" @click="doSubmit">
       Bid Now
     </btn-indigo>

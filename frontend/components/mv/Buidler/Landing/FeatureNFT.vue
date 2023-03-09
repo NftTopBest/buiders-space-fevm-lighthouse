@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white">
+  <div>
     <div class="mx-auto max-w-2xl py-8 px-4 sm:px-6 sm:pt-16 lg:max-w-7xl lg:px-8">
       <h2 class="font-bold mb-6 tracking-tight text-2xl text-gray-900">
         Feature NFTs
@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const products = [
   {
     id: 1,

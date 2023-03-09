@@ -6,19 +6,19 @@ My Photo for beach
 
 ## desc
 
-I will show you the great view on the beach.
+I will show you a great view of the beach.
 
 ## detail
 
-A beach is a landform alongside a body of water which consists of loose particles. The particles composing a beach are typically made from rock, such as sand, gravel, shingle, pebbles, etc., or biological sources, such as mollusc shells or coralline algae. Sediments settle in different densities and structures, depending on the local wave action and weather, creating different textures, colors and gradients or layers of material.
+A beach is a landform alongside a body of water that consists of loose particles. The particles composing a beach are typically made from rock, such as sand, gravel, shingle, pebbles, etc., or biological sources, such as mollusk shells or coralline algae. Sediments settle in different densities and structures, depending on the local wave action and weather, creating different textures, colors, and gradients or layers of material.
 
-## title
+## post title
 
 Great view here! the island I live
 
-## desc
+## post desc
 
-It's beautiful, right? require 2 nft to unlock the great view more content
+It's beautiful, right? require 2 NFT to unlock the great view more content
 
 ## encrypted content
 

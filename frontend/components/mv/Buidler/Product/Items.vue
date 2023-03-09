@@ -1,6 +1,5 @@
 <script setup lang="ts">
-const chainName = inject('chainName')
-const { currentTypeItems } = $(mvStore())
+const { currentTypeItems, chainName } = $(mvStore())
 </script>
 <template>
   <div class="bg-white">
@@ -22,7 +21,7 @@ const { currentTypeItems } = $(mvStore())
           <p class="flex font-medium mt-1 text-lg text-gray-900 justify-between">
             <span>#{{ item.tokenId }}</span>
             <span>
-              {{ get(item, 'properties.basicPrice') }} $NST
+              {{ get(item, 'properties.basicPrice') }} $BST
             </span>
           </p>
         </router-link>

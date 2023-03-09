@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white">
+  <div>
     <div class="mx-auto  max-w-2xl py-8 px-4 sm:py-12 sm:px-6 lg:max-w-7xl lg:px-8">
       <h2 class="font-bold mb-6 tracking-tight text-2xl text-gray-900">
         Newest NFTs
@@ -7,8 +7,8 @@
 
       <div class="grid gap-y-10 gap-x-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8 xl:grid-cols-4">
         <a v-for="product in products" :key="product.id" :href="product.href" class="group">
-          <div class="rounded-lg bg-gray-200 w-full overflow-hidden aspect-w-1 aspect-h-1 xl:aspect-w-7 xl:aspect-h-8">
-            <img :src="product.imageSrc" :alt="product.imageAlt" class="h-full object-cover object-center w-full group-hover:opacity-75">
+          <div class="rounded-lg bg-gray-200 w-full opacity-80 overflow-hidden aspect-w-1 aspect-h-1 xl:aspect-w-7 xl:aspect-h-8">
+            <img :src="product.imageSrc" :alt="product.imageAlt" class="h-full object-cover object-center w-full  group-hover:opacity-75">
           </div>
           <h3 class="mt-4 text-sm text-gray-700">{{ product.name }}</h3>
           <p class="font-medium mt-1 text-lg text-gray-900">{{ product.price }}</p>

@@ -11,7 +11,7 @@ const {
 const tokenId = inject('tokenId')
 const { contractRead } = $(web3AuthStore())
 const { getJson, getStatus } = $(useNFTStorage())
-const { doBuyOrSell } = $(mvStore())
+const { doBuyOrSell, getUserProfileLink, getBuidlerInfo } = $(mvStore())
 
 const marketItemMethodName = $computed(() => {
   if (marketType === 'Bid')
@@ -35,6 +35,8 @@ watchEffect(async() => {
     // console.log('====> index, startIdx :', index, startIdx)
     const data = await getJson(item.cid)
     const status = await getStatus(item.cid)
+    data.userData = await getBuidlerInfo(data.createdBy)
+
     return {
       ...data,
       ...item,
@@ -53,15 +55,17 @@ watchEffect(async() => {
             <template v-for="item in jsonItems" :key="item.cid">
               <li v-show="item.isListed">
                 <div class="flex space-x-3 items-center">
-                  <div class="flex-shrink-0">
-                    <IpfsImg class="rounded-full h-10 w-10" :src="item.userData.avatar" alt="" />
-                  </div>
+                  <router-link :to="getUserProfileLink(item?.userData?.walletAddress)" class="flex-shrink-0">
+                    <IpfsImg class="rounded-full object-cover h-10 w-10" :src="item?.userData?.avatar" alt="" />
+                  </router-link>
                   <div class="flex flex-1 justify-between">
                     <div class="flex flex-col text-sm justify-between">
-                      <a href="#" class="text-gray-500">{{ item.userData.name }}</a>
+                      <router-link :to="getUserProfileLink(item?.userData?.walletAddress)" class="text-gray-500">
+                        {{ item.userData.name }}
+                      </router-link>
                       <span class="font-medium text-gray-900">
                         <UseTimeAgo v-if="item.created" v-slot="{ timeAgo }" :time="item.created">
-                          {{ formatEther(item.unitPrice) }} $NST x {{ item.amount }}
+                          {{ formatEther(item.unitPrice) }} $BST x {{ item.amount }}
                         </UseTimeAgo>
                         <eos-icons:loading v-else class="h-6 text-black w-6" />
                       </span>

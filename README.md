@@ -27,6 +27,22 @@ A web3 way of creater space that like a web3 amazon!
 * [All screenshots](./screenshots/)
 * [Pitch Deck](./buidlers-space.pdf)
 
+## Features Develep duiring the CyberConnect Hackathon
+
+* Integration with ccProfile 
+
+## Future Roadmap
+
+The vision of the Buidlers.Space is Expending to all industry that help every creators to publish their creation with ownership on web3 via Buidlers.Space.
+
+### 3 month plan
+
+* Improve usablity of current integrated SDK: CyberConnect/LitProtocol/LivePeer
+* Integrate XMTP to build the realtime chat feature in our platform
+* Integrate Notify to notify users while some important event happened
+* Help 100 creators to publish over 300 creations on Builders.Space, and get 1k consumers users to mint/trade NFT of the creations.
+* Users collected over 1k EssenceNFT on Buidlers.Space.
+
 ## Features
 
 * We have the $BST(Buidler Stable Token) faucet not for user to test

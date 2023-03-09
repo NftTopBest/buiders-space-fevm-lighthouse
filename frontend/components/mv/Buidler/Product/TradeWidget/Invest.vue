@@ -15,7 +15,7 @@ const {
         <label for="amount" class="font-medium text-sm text-gray-700 block">Amount</label>
         <div class="rounded-md flex shadow-sm mt-1">
           <input id="amount" type="text" name="amount" autocomplete="amount" class="rounded-none rounded-l-md border-gray-300 flex-1 w-full min-w-0 block sm:text-sm focus:border-indigo-500 focus:ring-indigo-500">
-          <span class="border rounded-r-md bg-gray-50 border-l-0 border-gray-300 px-3 text-gray-500 inline-flex items-center sm:text-sm">$NST</span>
+          <span class="border rounded-r-md bg-gray-50 border-l-0 border-gray-300 px-3 text-gray-500 inline-flex items-center sm:text-sm">$BST</span>
         </div>
       </div>
     </div>
