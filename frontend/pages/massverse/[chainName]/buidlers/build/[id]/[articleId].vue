@@ -17,7 +17,7 @@ let isLoading = $ref(false)
 const desc = $ref('')
 
 const ccSBT = $computed(() => post?.ccSBT || {})
-onMounted(async() => {
+onMounted(async () => {
   isLoading = true
   await getTokenDataFromChain(tokenId)
   post = await getTokenPost(tokenId, articleId)
@@ -25,7 +25,7 @@ onMounted(async() => {
   isLoading = false
 })
 
-const submitDecrypt = async() => {
+const submitDecrypt = async () => {
   desc = await doDecryptPost(post.content)
 }
 
@@ -68,9 +68,6 @@ const commentPost = $computed(() => {
       </ol>
     </nav>
     <div class="bg-white rounded-lg mb-10 pb-10">
-      <div v-if="isMyWalletAddress(product?.tokenOwner) && post.streamKey">
-        Your streamKey is:  {{ post.streamKey }} . see <a href="https://docs.livepeer.org/guides/developing/stream-via-obs" target="_blank" class="text-blue-600">here</a> and push your stream.
-      </div>
       <div class="rounded-lg flex h-80 mb-6 justify-center relative isolate items-center">
         <IpfsImg :src="post.image" class="rounded-t-xl object-cover h-80 w-full inset-0 -z-1 absolute" :has-modal="true" />
       </div>
@@ -96,7 +93,7 @@ const commentPost = $computed(() => {
           {{ post.excerpt }}
         </p>
         <Loading v-if="isLoading" class="p-10" text="loading..." />
-        <div v-else class="flex flex-col py-5">
+        <div v-else class="flex flex-col py-5 items-center">
           <div v-if="post?.content?.itemAccessNFTCount && !desc">
             <p class="text-center text-2xl">
               The content require you to own {{ post?.content?.itemAccessNFTCount }} NFT to get access!
@@ -105,10 +102,40 @@ const commentPost = $computed(() => {
               Unlock the content
             </btn-indigo>
           </div>
-          <MvBuidlerProductLivepeerClient v-else-if="post.type === 'liveroom' && desc" :playback-id="desc" />
+          <div v-else-if="post.type === 'liveroom' && desc">
+            <MvBuidlerProductLivepeerClient :playback-id="desc" />
+            <br>
+            <br>
+            <br>
+            <div class="sm:border-t sm:border-gray-200 sm:grid sm:pt-5 sm:gap-4 sm:grid-cols-3 sm:items-start">
+              <label for="pkpPublicKey" class="font-medium text-sm text-gray-900 leading-6 block sm:pt-1.5">Twitter Link</label>
+              <div class="mt-2 sm:mt-0 sm:col-span-2">
+                <div class="rounded-md flex max-w-lg shadow-sm">
+                  <input id="pkpPublicKey" v-model="twitterLink" type="text" name="pkpPublicKey" autocomplete="pkpPublicKey" class="rounded-md border-gray-300 flex-1 mr-2 min-w-0 w-80 block sm:text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+              </div>
+            </div>
+            <div class="sm:border-t sm:border-gray-200 sm:grid sm:pt-5 sm:gap-4 sm:grid-cols-3 sm:items-start">
+              <label for="pkpEthAddress" class="font-medium text-sm text-gray-900 leading-6 block sm:pt-1.5">Reward wallet address</label>
+              <div class="mt-2 sm:mt-0 sm:col-span-2">
+                <div class="rounded-md flex max-w-lg shadow-sm">
+                  <input id="pkpEthAddress" v-model="walletAddress" type="text" name="pkpEthAddress" autocomplete="pkpEthAddress" class="rounded-md border-gray-300 flex-1 mr-2 min-w-0 w-80 block sm:text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+              </div>
+            </div>
+            <btn-indigo class="mt-4 w-full">
+              claim reward
+            </btn-indigo>
+            <br>
+            <br>
+            <br>
+          </div>
           <div v-else>
             {{ desc }}
           </div>
+        </div>
+        <div v-if="isMyWalletAddress(product?.tokenOwner) && post.streamKey">
+          Your streamKey is: <span class="text-blue-600"> {{ post.streamKey }} </span> . see <a href="https://docs.livepeer.org/guides/developing/stream-via-obs" target="_blank" class="text-blue-600">here</a> and push your stream.
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ const tokenIdArr = []
 const tagsKeyByType = {}
 
 export const mvStore = defineStore('mvStore', () => {
-  const { initContract, walletAddress, addSuccess, addWarning, userData, getContractAddress, contractRead } = $(web3AuthStore())
+  const { initContract, walletAddress, signer, addSuccess, addWarning, userData, getContractAddress, contractRead } = $(web3AuthStore())
   const { callCCApiMethod, doCreateEssenceNFTGasless } = $(ccStore())
   const { getJson, getStatus, storeJson } = $(useNFTStorage())
   const route = useRoute()
@@ -103,6 +103,9 @@ export const mvStore = defineStore('mvStore', () => {
     theSymbol: '',
     price: '',
     itemAccessNFTCount: '1',
+    totalRewardBst: 0.1,
+    pkpPublicKey: '0x040213a759d6bfa236e4904d44b4c40c28a10330edfa1ecd8eeed4310508f4015fdc165199ec411672638b13d120ab6ba5f808d75ecbecf1ed230c25a6e7ae5044',
+    pkpEthAddress: '0xeD42Fb0c79Dbed86e7f6308d0fbD1740F5EC0326',
     excerpt: '',
     statusText: 'Submitting, pls wait!',
     type: 'article',
@@ -123,11 +126,11 @@ export const mvStore = defineStore('mvStore', () => {
     return items.filter(item => item.tokenType === currentType?.name)
   })
 
-  const getBuidlerInfo = async(address) => {
+  const getBuidlerInfo = async (address) => {
     const authorCid = await contractRead('BuidlerProtocol', 'getBuidler', address)
     return getJson(authorCid)
   }
-  const updateListFromChain = async() => {
+  const updateListFromChain = async () => {
     const contractReader = await initContract('BuidlerProtocol')
     const start = 0
     const limit = 100
@@ -140,7 +143,7 @@ export const mvStore = defineStore('mvStore', () => {
       itemsCountArr,
       metaCountArr,
     } = rz
-    await Promise.all(tokenURIArr.map(async(tokenURI, index) => {
+    await Promise.all(tokenURIArr.map(async (tokenURI, index) => {
       const tokenId = start + index
       if (tokenIdArr.includes(tokenId))
         return
@@ -184,7 +187,7 @@ export const mvStore = defineStore('mvStore', () => {
     return `/${chainName}/buidlers/user/${address}/${dataType}`
   }
 
-  const getTokenDataFromChain = async(tokenId) => {
+  const getTokenDataFromChain = async (tokenId) => {
     const contractReader = await initContract('BuidlerProtocol')
     const rz = await contractReader.getToken(tokenId, '', '')
 
@@ -215,7 +218,7 @@ export const mvStore = defineStore('mvStore', () => {
     // console.log('====> product :', product)
   }
 
-  const doBuyOrSell = async(item, actionName) => {
+  const doBuyOrSell = async (item, actionName) => {
     if (item.isLoading) return
     item.isLoading = true
     let theError = false
@@ -240,9 +243,9 @@ export const mvStore = defineStore('mvStore', () => {
     item.isLoading = false
   }
 
-  const updateTokenPosts = async(tokenId) => {
+  const updateTokenPosts = async (tokenId) => {
     let thePosts = await contractRead('BuidlerProtocol', 'getItems', tokenId, 0, 100, 'Post')
-    thePosts = await Promise.all(thePosts.map(async(cid) => {
+    thePosts = await Promise.all(thePosts.map(async (cid) => {
       const data = await getJson(cid)
       const status = await getStatus(cid)
       return {
@@ -253,9 +256,9 @@ export const mvStore = defineStore('mvStore', () => {
     posts = thePosts
   }
 
-  const getTokenPost = async(tokenId, index) => {
+  const getTokenPost = async (tokenId, index) => {
     let thePosts = await contractRead('BuidlerProtocol', 'getItems', tokenId, index, 1, 'Post')
-    thePosts = await Promise.all(thePosts.map(async(cid) => {
+    thePosts = await Promise.all(thePosts.map(async (cid) => {
       const data = await getJson(cid)
       const status = await getStatus(cid)
       return {
@@ -274,7 +277,7 @@ export const mvStore = defineStore('mvStore', () => {
     postModal.statusText = ''
   }
 
-  const doDecryptPostInModal = async() => {
+  const doDecryptPostInModal = async () => {
     if (postModal.isLoading) return
     postModal.isLoading = true
 
@@ -293,7 +296,7 @@ export const mvStore = defineStore('mvStore', () => {
       postModal.statusText = err
   }
 
-  const doDecryptPost = async({ encryptedSymmetricKey = '', encryptedString = '', accessControlConditions = [] }) => {
+  const doDecryptPost = async ({ encryptedSymmetricKey = '', encryptedString = '', accessControlConditions = [] }) => {
     const { doDecryptString } = await litHelper({ chain, litNodeClient })
     const { decryptedString, err } = await doDecryptString(encryptedSymmetricKey, encryptedString, accessControlConditions)
     // console.log('====={decryptedString, err, encryptedSymmetricKey, encryptedString, accessControlConditions}')
@@ -304,9 +307,9 @@ export const mvStore = defineStore('mvStore', () => {
     return decryptedString
   }
 
-  const doSubmitCreateItem = async() => {
+  const doSubmitCreateItem = async () => {
     if (form.isLoading) return
-    // form.isLoading = true
+    form.isLoading = true
     const title = form.title
     const excerpt = form.excerpt
     const image = form.image
@@ -314,31 +317,45 @@ export const mvStore = defineStore('mvStore', () => {
     const totalSupply = form.totalSupply
     const amount = parseEther(form.price).toString()
 
-    const ccPost = await callCCApiMethod('createPost', {
-      title: `tokenId:${form.tokenId}-postId:${posts.length}`,
-      body: excerpt,
-      author: ccProfileHandle,
-    })
+    let ccPost = {}
+    let handle = ''
+    let createSBTRz = {}
+    if (CHAIN_NAME === 'bscTestnet') {
+      ccPost = await callCCApiMethod('createPost', {
+        title: `tokenId:${form.tokenId}-postId:${posts.length}`,
+        body: excerpt,
+        author: ccProfileHandle,
+      })
 
-    const handle = get(product, 'properties.ccProfileHandle', '')
-    const createSBTRz = await doCreateEssenceNFTGasless({
-      title,
-      description: form.excerpt,
-      handle,
-      image,
-      theSymbol,
-      totalSupply,
-      amount,
-    })
-    if (createSBTRz.err) {
-      addWarning(createSBTRz.err)
-      return
+      handle = get(product, 'properties.ccProfileHandle', '')
+      createSBTRz = await doCreateEssenceNFTGasless({
+        title,
+        description: form.excerpt,
+        handle,
+        image,
+        theSymbol,
+        totalSupply,
+        amount,
+      })
+      if (createSBTRz.err) {
+        addWarning(createSBTRz.err)
+        return
+      }
     }
 
     if (form.type === 'liveroom') {
       const { playbackId, streamKey } = await doCreateStream({ name: 'liveroom' })
       form.description = playbackId
       form.streamKey = streamKey
+      // if (form.totalRewardBst > 0)
+      //   form.statusText = `Sending ${form.totalRewardBst} matic to pkp address: ${form.pkpEthAddress}`
+      //   await new Promise(resolve => setTimeout(resolve, 3000))
+      // await Promise
+      // const tx = await signer.sendTransaction({
+      //   to: form.pkpEthAddress,
+      //   value: parseEther(form.totalRewardBst),
+      // })
+      // await tx.wait()
     }
     let content = form.description
 
@@ -377,6 +394,9 @@ export const mvStore = defineStore('mvStore', () => {
       streamKey: form.type === 'liveroom' ? form.streamKey : undefined,
       content,
       ccPost,
+      totalRewardBst: form.totalRewardBst,
+      pkpPublicKey: form.pkpPublicKey,
+      pkpEthAddress: form.pkpEthAddress,
       ccProfileHandle,
       ccSBT: {
         ...createSBTRz,
@@ -408,11 +428,11 @@ export const mvStore = defineStore('mvStore', () => {
 
   let isUserItemsLoading = $ref(false)
   const userOwnedMap = $ref({})
-  const getUserOwned = async(address) => {
+  const getUserOwned = async (address) => {
     if (userOwnedMap[address]?.length > 0) return userOwnedMap[address]
     isUserItemsLoading = true
     const rz = await contractRead('BuidlerProtocol', 'balanceOfTokensUserAllOwned', address)
-    const items = await Promise.all(rz.tokenIdArr.map(async(tokenId, index) => {
+    const items = await Promise.all(rz.tokenIdArr.map(async (tokenId, index) => {
       const tokenURI = rz.tokenURIArr[index]
       const data = await getJson(tokenURI)
       const tokenBalance = rz.tokenBalanceArr[index]
@@ -434,7 +454,7 @@ export const mvStore = defineStore('mvStore', () => {
     bid: 'getBidByOwner',
     creation: 'getTokenListByOwner',
   }
-  const getUserItems = async(dataType, address) => {
+  const getUserItems = async (dataType, address) => {
     let items = get(userItems, `${dataType}.${address}`, [])
     if (items.length > 0) return items
 
@@ -443,7 +463,7 @@ export const mvStore = defineStore('mvStore', () => {
     switch (dataType) {
       case 'ask':
       case 'bid':
-        items = await Promise.all(rz.items.map(async(item, index) => {
+        items = await Promise.all(rz.items.map(async (item, index) => {
           const tokenURI = rz.tokenURIs[index]
           const tokenInfo = await getJson(tokenURI)
           return {
@@ -453,7 +473,7 @@ export const mvStore = defineStore('mvStore', () => {
         }))
         break
       case 'creation':
-        items = await Promise.all(rz.tokenURIArr.map(async(tokenURI, index) => {
+        items = await Promise.all(rz.tokenURIArr.map(async (tokenURI, index) => {
           const tokenInfo = await getJson(tokenURI)
           const tokenId = rz.tokenIdArr[index]
           const totalSupply = rz.totalSupplyArr[index]
@@ -476,7 +496,7 @@ export const mvStore = defineStore('mvStore', () => {
     return items
   }
 
-  watchEffect(async() => {
+  watchEffect(async () => {
     if (!walletAddress) return
     await updateListFromChain()
   })
