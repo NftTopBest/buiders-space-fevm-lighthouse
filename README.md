@@ -17,8 +17,11 @@ A web3 way of creater space that like a web3 amazon!
     * [create live peer code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/mvStore.ts#L338-L341)
     * [token gating code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/mvStore.ts#L345-L368)
   * Lit action with matic reward for retwitter user, only PoC code
-    * IPFS lit action [link](https://bafybeig2pwogasek4weng2gdzms6yopa6sohzbprgoip4jyxuttlrr4d7y.ipfs.nftstorage.link/) 
-    * Live peer retwiter reward UI [code](#)
+    * IPFS lit action [link](https://bafybeig2pwogasek4weng2gdzms6yopa6sohzbprgoip4jyxuttlrr4d7y.ipfs.nftstorage.link/)
+    * while Generate Live peer id send matic to the PKP acctoun
+      * UI [code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/bdc2f01465/frontend/components/mv/Buidler/Post/CreateLive.vue#L20-L45)
+      * Logic [code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/bdc2f01465/frontend/stores/mvStore.ts#L350-L358)
+    * Live peer retwiter reward UI [code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/bdc2f01465/frontend/pages/massverse/%5BchainName%5D/buidlers/build/%5Bid%5D/%5BarticleId%5D.vue#L110-L125)
 
 ### CyberConnect SDK
 
