@@ -10,15 +10,23 @@ A web3 way of creater space that like a web3 amazon!
 
 ## Features Develep duiring the CyberConnect 2023 Hackathon
 
+### Lit Action and LivePeer
+
+* Integration with livepeer and LitProtocol with lit token gating and lit action
+  * Create token gating live stream and user can unlock by mint creation NFT or collect the Essence NFT(SBT)
+    * [create live peer code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/mvStore.ts#L338-L341)
+    * [token gating code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/mvStore.ts#L345-L368)
+  * Lit action with matic reward for retwitter user, only PoC code
+    * IPFS lit action [link](https://bafybeig2pwogasek4weng2gdzms6yopa6sohzbprgoip4jyxuttlrr4d7y.ipfs.nftstorage.link/) 
+    * Live peer retwiter reward UI [code](#)
+
+### CyberConnect SDK
+
 * Integration with ccProfile:
   * While Creator create new NFT for creation, we create a new Profile for this creation and bind on the NFT page [code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/components/mv/Buidler/CreateNFT/CCProfile.vue#L16)
 * Integration with Create essence.
   * Creator create new content for Creation NFT, will create a new Essence NFT(SBT), that user can collect it but can not transfer to others
     * [create post and create essence NFT gasless code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/mvStore.ts#L317-L336)
-* Integration with livepeer and LitProtocol
-  * Create token gating live stream and user can unlock by mint creation NFT or collect the Essence NFT(SBT)
-    * [create live peer code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/mvStore.ts#L338-L341)
-    * [token gating code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/stores/mvStore.ts#L345-L368)
 * Integration with Collect essence.
   * user can collect essence NFT on content page [code](https://github.com/NftTopBest/buiders-space-fevm-lighthouse/blob/main/frontend/components/cc/collect/btn.vue#L19-L21)
 * Integration with Post.

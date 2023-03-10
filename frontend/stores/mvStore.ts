@@ -347,15 +347,15 @@ export const mvStore = defineStore('mvStore', () => {
       const { playbackId, streamKey } = await doCreateStream({ name: 'liveroom' })
       form.description = playbackId
       form.streamKey = streamKey
-      // if (form.totalRewardBst > 0)
-      //   form.statusText = `Sending ${form.totalRewardBst} matic to pkp address: ${form.pkpEthAddress}`
-      //   await new Promise(resolve => setTimeout(resolve, 3000))
-      // await Promise
-      // const tx = await signer.sendTransaction({
-      //   to: form.pkpEthAddress,
-      //   value: parseEther(form.totalRewardBst),
-      // })
-      // await tx.wait()
+      if (form.totalRewardBst > 0)
+        form.statusText = `Sending ${form.totalRewardBst} matic to pkp address: ${form.pkpEthAddress}`
+      await new Promise(resolve => setTimeout(resolve, 3000))
+      await Promise
+      const tx = await signer.sendTransaction({
+        to: form.pkpEthAddress,
+        value: parseEther(form.totalRewardBst),
+      })
+      await tx.wait()
     }
     let content = form.description
 
