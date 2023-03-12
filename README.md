@@ -10,6 +10,12 @@ A web3 way of creater space that like a web3 amazon!
 
 ## Features Develep duiring the CyberConnect 2023 Hackathon
 
+full CyberConnect sdk data created:
+
+* user home page(show primary ProfileID from the address) with post, comment and essenceNFT collected that can follow:  <https://bsctestnet.buidlers.space/bscTestnet/buidlers/user/0xC6E58fb4aFFB6aB8A392b7CC23CD3feF74517F6C/feed>
+* NFT (create a new profileID to attached to while create new NFT) with cyberconnect Post, comment and follow: <https://bsctestnet.buidlers.space/bscTestnet/buidlers/build/13>
+* a demo essenceNFT connected with token gating, lit action and livepeer content: <https://bsctestnet.buidlers.space/bscTestnet/buidlers/build/13/10>
+
 ### Lit Action and LivePeer
 
 * Integration with livepeer and LitProtocol with lit token gating and lit action
